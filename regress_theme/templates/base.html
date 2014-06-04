@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+{% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
+<head>
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+    {% ifinstalled mezzanine.blog %}
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+    <link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+    {% endifinstalled %}
+
+    {% compress css %}
+    <link rel="stylesheet" media="screen" href="{% static "css/superfish.css" %}" /> 
+    <link rel="stylesheet" href="{% static "css/nivo-slider.css" %}" media="all"  /> 
+    <link rel="stylesheet" href="{% static "css/tweet.css" %}" media="all"  />
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="{% static "css/mezzatheme.css" %}">
+    <link rel="stylesheet" media="all" href="{% static "css/lessframework.css" %}"/>
+    {% block extra_css %}{% endblock %}
+    {% endcompress %}
+
+    {% compress js %}
+    <script src="{% static "js/modernizr-2.5.3.min.js" %}"></script>
+    <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+    <!-- scripts concatenated and minified via build script -->
+    {% if request.user.is_staff %}
+    <script>
+        $(document).ready(function() {
+            jQuery.resize.throttleWindow = false;
+        });
+    </script>
+    {% endif %}
+    <script src="{% static "js/custom.js" %}"></script>
+    
+    <!-- superfish -->
+    <script  src="{% static "js/superfish-1.4.8/js/hoverIntent.js" %}"></script>
+    <script  src="{% static "js/superfish-1.4.8/js/superfish.js" %}"></script>
+    <script  src="{% static "js/superfish-1.4.8/js/supersubs.js" %}"></script>
+    <!-- ENDS superfish -->
+    
+    <script src="{% static "js/jquery.isotope.min.js" %}"></script>
+    <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
+    <script src="{% static "js/css3-mediaqueries.js" %}"></script>
+    <script src="{% static "js/tabs.js" %}"></script>
+    <script  src="{% static "js/poshytip-1.1/src/jquery.poshytip.min.js" %}"></script>
+    <!-- end scripts -->
+    {% block extra_js %}{% endblock %}
+    {% endcompress %}
+
+    {% block extra_head %}{% endblock %}
+
+</head>
+<body id="{% block body_id %}body{% endblock %}">
+    {% blog_recent_posts 6 as recent_posts %}
+    <!-- HEADER -->
+    <header>
+        
+        <!-- header wrapper -->
+        <div class="wrapper cf">
+            <div id="logo">
+                <a href="/" ><img src="{% static "img/logo.png" %}" alt="{{ settings.SITE_TITLE }}" /></a>
+            </div>
+        </div><!-- ENDS header wrapper -->
+        
+        
+        
+        <!-- nav -->
+        <nav class="cf">
+            <div class="wrapper cf">
+                {% page_menu "pages/menus/dropdown.html" %}
+                <div id="combo-holder"></div>
+            </div>
+        </nav>
+        <!-- ends nav -->
+            
+    </header>
+    <!-- ENDS HEADER -->
+
+    {% block all_content %}
+    <div role="main" id="main">
+        <div class="wrapper {% block wrapper_class %}{% endblock %}">
+            {% block wrapper %}
+            <!-- page-content -->
+            <div class="page-content">
+                
+                <!-- entry-content -->  
+                <div class="entry-content cf">
+                    
+                    <h2>{% block title %}{% endblock %}</h2>
+                    {% block main %}{% endblock %}
+
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+    {% endblock %}
+    
+    <footer>
+    
+        <!-- wrapper -->
+        <div class="wrapper cf">
+        
+        
+            <!-- social -->
+            <div class="sb-holder cf">
+                <ul id="social-bar" class="cf">
+                    <li class="left-corner"><i></i></li>
+                    <li><a href="http://www.facebook.com"  title="Become a fan" ><img src="{% static "img/social/Facebook.png" %}"  alt="Facebook" /></a></li>
+                    <li><a href="http://www.twitter.com" title="Follow my tweets" ><img src="{% static "img/social/Twitter.png" %}"  alt="twitter" /></a></li>
+                    <li><a href="http://www.google.com"  title="Add to the circle" ><img src="{% static "img/social/Google+.png" %}" alt="Google plus" /></a></li>
+                    
+                    <li class="right-corner"><i></i></li>
+                </ul>
+                
+                
+            </div>
+            <!-- ENDS social -->
+            
+            
+            <!-- widgets -->
+            <ul  class="widget-cols cf">
+                <li class="first-col">
+                    
+                    <div class="widget-block">
+                        <h4>RECENT POSTS</h4>
+                        {% if recent_posts %}
+                        {% for post in recent_posts|slice:":3" %}
+                        <div class="recent-post cf">
+                            <a href="{{ post.get_absolute_url }}" class="thumb"><img style="max-width: 54px;" src="{{ MEDIA_URL }}{% thumbnail post.featured_image 108 108 %}" alt="Post" /></a>
+                            <div class="post-head">
+                                <a href="#">{{ post.title }}</a><span> {{ post.publish_date|date:"F j, Y" }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p>Nothing here yet, check back soon!</p>
+                        {% endif %}
+                    </div>
+                </li>
+                
+                <li class="second-col">
+                    
+                    <div class="widget-block">
+                        <h4>ABOUT</h4>
+                        <p>Regress is based on Vintage Template, you can <a href="http://luiszuno.com/blog/license" >read it's license</a>.</p> 
+                        
+                        <p>Placeholder images by <a href="http://twistedfork.me/" >Dan Matutina</a></p>
+                        <p>Visit <a href="http://templatecreme.com/" >Template Creme</a> and find the most beautiful free templates up to date.</p>
+                        
+                    </div>
+                    
+                </li>
+                
+                <li class="third-col">
+                    
+                    <div class="widget-block">
+                        <h4>Contact</h4>
+                        <p>(123) 123-1235</p>
+                        <p>123 Abc St<br/>
+                            New York, New York 12345
+                        </p>
+                        <p><a href="mailto:email@example.com">email@example.com</p>
+                    </div>
+                    
+                </li>
+                
+                <li class="fourth-col">
+                    
+                    <div class="widget-block">
+                        <h4>Popular Pages</h4>
+                        <ul>
+                            {% page_menu "pages/menus/flat_footer.html" %}
+                        </ul>
+                    </div>
+                    
+                </li>   
+            </ul>
+            <!-- ENDS widgets -->
+            
+            
+            <div id="footer-bottom">Regress <a href="http://mezzathe.me">MEZZaTHEME</a> based on Vintage Template designed by <a href="http://www.luiszuno.com" >luiszuno.com</a></div>
+        
+            
+        </div><!-- ENDS wrapper -->
+        
+        
+        
+
+    </footer>
+
+{% include "includes/footer_scripts.html" %}
+
+</body>
+</html>

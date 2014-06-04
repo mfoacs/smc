@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n static blog_tags mezzanine_tags regress_tags %}
+
+{% block meta_title %}{% trans "Home" %}{% endblock %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+
+{% block all_content %}
+<!-- MAIN -->
+    <div role="main" id="main">
+        <div class="wrapper">
+        {% home_page_slides as slides %}
+        {% if slides %}
+        <!-- SLIDER -->
+        <div class="slider-wrapper theme-default theme-project theme-home">
+            <div class="ribbon"></div>
+            <div id="slider" class="nivoSlider">
+                {% for slide in slides %}
+                <a href="{% if slide.link %}{{ slide.link }}{% else %}#{% endif %}">
+                    <img src="{{ MEDIA_URL }}{% thumbnail slide.image 920 390 %}" alt="" title="{{ slide.title }}" />
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- ENDS SLIDER -->
+        {% endif %}
+        
+        
+        <!-- headline -->
+        <div class="headline">
+            {{ settings.SITE_TAGLINE }}
+        </div>
+        <!-- ENDS headline -->
+        
+         
+         <!-- Feature -->
+         {% if recent_posts %}
+         <ul id="filter-container-feature" class="feature">
+            {% for post in recent_posts %}
+            <li>
+                <a href="{{ post.get_absolute_url }}" class="thumb" ><img src="{{ MEDIA_URL }}{% thumbnail post.featured_image 416 484 %}" alt="" />
+                    <div class="date"><span class="d">{{ post.publish_date|date:"j" }}</span><span class="m">{{ post.publish_date|date:"M" }}</span></div>
+                </a>
+                <div class="caption"><a class="inherit" href="{{ post.get_absolute_url }}">SMC news and events</a></div>
+            </li>
+            {% endfor %}
+         </ul>
+         <!-- ENDS feature -->
+         {% endif %}
+      
+      
+      </div>
+    </div>
+    <!-- ENDS MAIN -->
+{% endblock %}
