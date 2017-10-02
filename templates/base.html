@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
+{% load pages_tags mezzanine_tags i18n staticfiles blog_tags %}
 <head>
 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -26,7 +26,7 @@
     {% endcompress %}
 
     {% compress js %}
-    <script src="{% static "js/modernizr-2.5.3.min.js" %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
     <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
     <!-- scripts concatenated and minified via build script -->
     {% if request.user.is_staff %}
@@ -52,9 +52,14 @@
     <!-- end scripts -->
     {% block extra_js %}{% endblock %}
     {% endcompress %}
-
-    {% block extra_head %}{% endblock %}
-
+	
+    {% block extra_head %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    {% endblock %}
+	
 </head>
 <body id="{% block body_id %}body{% endblock %}">
     {% blog_recent_posts 6 as recent_posts %}
